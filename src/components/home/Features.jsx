@@ -9,7 +9,8 @@ import {
 
 import Container from "../common/Container";
 import SectionTitle from "../common/SectionTitle";
-import GlassCard from "../common/GlassCard";
+
+import { Card, CardContent } from "@/components/ui/card";
 
 const features = [
   {
@@ -47,13 +48,12 @@ const features = [
 export default function Features() {
   return (
     <section className="py-28">
-
       <Container>
 
         <SectionTitle
           badge="Features"
           title="Powerful AI Analysis"
-          description="TruthLens AI combines multiple analysis engines to evaluate online content with explainable and transparent results."
+          description="TruthLens AI combines multiple AI models to evaluate online content."
         />
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -62,33 +62,32 @@ export default function Features() {
             const Icon = feature.icon;
 
             return (
-              <GlassCard
+              <Card
                 key={feature.title}
-                className="group p-8 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/30"
+                className="transition hover:-translate-y-2 hover:border-cyan-400/40"
               >
+                <CardContent className="p-8">
 
-                <div className="mb-6 inline-flex rounded-2xl bg-cyan-500/10 p-4">
+                  <div className="mb-6 inline-flex rounded-xl bg-cyan-500/10 p-4">
 
-                  <Icon
-                    size={28}
-                    className="text-cyan-400"
-                  />
+                    <Icon className="h-7 w-7 text-cyan-400" />
 
-                </div>
+                  </div>
 
-                <h3 className="text-2xl font-bold">
+                  <h3 className="text-2xl font-bold">
 
-                  {feature.title}
+                    {feature.title}
 
-                </h3>
+                  </h3>
 
-                <p className="mt-4 leading-8 text-slate-400">
+                  <p className="mt-4 text-slate-400 leading-8">
 
-                  {feature.desc}
+                    {feature.desc}
 
-                </p>
+                  </p>
 
-              </GlassCard>
+                </CardContent>
+              </Card>
             );
           })}
 

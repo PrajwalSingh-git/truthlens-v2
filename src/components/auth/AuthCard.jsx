@@ -1,25 +1,35 @@
-export default function AuthCard({ title, subtitle, children }) {
+import { Card, CardContent } from "@/components/ui/card";
+
+export default function AuthCard({
+  title,
+  subtitle,
+  children,
+}) {
   return (
-    <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-10 shadow-2xl backdrop-blur-xl">
+    <Card className="w-full max-w-md border-white/10 bg-black/40 backdrop-blur-xl">
 
-      <h1 className="text-4xl font-black">
+      <CardContent className="p-8">
 
-        {title}
+        <h1 className="text-3xl font-bold">
 
-      </h1>
+          {title}
 
-      <p className="mt-4 text-slate-400">
+        </h1>
 
-        {subtitle}
+        <p className="mt-2 text-slate-400">
 
-      </p>
+          {subtitle}
 
-      <div className="mt-10">
+        </p>
 
-        {children}
+        <div className="mt-8">
 
-      </div>
+          {children}
 
-    </div>
+        </div>
+
+      </CardContent>
+
+    </Card>
   );
 }

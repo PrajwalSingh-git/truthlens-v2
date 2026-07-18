@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 import { supabase } from "../../services/supabase";
 
-import Button from "../ui/Button";
-import Input from "../ui/Input";
+import { Button } from "@/components/ui/button";
+import Input from "../ui/input";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);

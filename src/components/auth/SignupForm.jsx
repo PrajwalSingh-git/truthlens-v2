@@ -2,9 +2,8 @@ import { useState } from "react";
 
 import { supabase } from "../../services/supabase";
 
-import Input from "../ui/Input";
-import Button from "../ui/Button";
-
+import Input from "../ui/input";
+import { Button } from "@/components/ui/button";
 export default function SignupForm() {
   const [loading, setLoading] = useState(false);
 
