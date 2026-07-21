@@ -6,7 +6,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/truthlens-v2/',
+  base: '/truthlens-v2',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
