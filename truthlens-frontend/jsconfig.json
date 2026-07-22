@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "https://prajwalsingh-git.github.io/truthlens-v2/",
     "paths": {
       "@/*": ["./src/*"]
     }
