@@ -21,7 +21,7 @@ import NotFound from './pages/NotFound'
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/truthlens-v2">
         <Toaster
           position="top-center"
           toastOptions={{
