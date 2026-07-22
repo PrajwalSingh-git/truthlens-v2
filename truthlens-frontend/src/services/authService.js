@@ -22,7 +22,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}dashboard`,
+      redirectTo: `${window.location.origin}/truthlens-v2/dashboard`,
     },
   })
   if (error) throw error
