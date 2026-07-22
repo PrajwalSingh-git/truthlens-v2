@@ -1,8 +1,8 @@
 // TODO: update these to your real profile/repo URLs
 export const SOCIAL_LINKS = {
-  github: 'https://github.com/PrajwalSingh-git',
-  linkedin: 'https://www.linkedin.com/in/prajwal-singh-',
-  instagram: 'https://www.instagram.com/prajwalsingh._?igsh=eXJ3d2hzMDRiOWcz',
+  github: 'https://github.com/your-username/your-repo',
+  linkedin: 'https://www.linkedin.com/in/your-linkedin',
+  instagram: 'https://www.instagram.com/your-instagram',
 }
 
 export function GithubMark({ className }) {

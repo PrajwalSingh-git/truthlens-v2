@@ -98,21 +98,45 @@ Other free/low-cost options if you want to extend `app/services/llm_engine.py` y
 ## 4. Deployment (matches the PRD's free-tier stack)
 
 ### Frontend → GitHub Pages
+
+**SPA routing note:** this app uses clean URLs (`/analyze`, `/dashboard`, etc.) via React Router. GitHub Pages doesn't natively support client-side routing — a direct visit or refresh on `/analyze` would 404. This repo already includes the fix: `public/404.html` redirects unknown paths back to `index.html` with the real path encoded, and a small script in `index.html` restores it before React Router mounts. **One thing to check**: `public/404.html` has a `pathSegmentsToKeep` value — set it to `1` if you're deploying as a project page (`your-username.github.io/repo-name/`, the default and most common case), or `0` if deploying as a root user/org page (`your-username.github.io`).
+
+**Option A — GitHub Actions (recommended, auto-deploys on push):**
+1. Copy `.github/workflows/deploy-frontend.yml` from this package into your repo (same path).
+2. In your GitHub repo: **Settings → Pages → Source → GitHub Actions**.
+3. In **Settings → Secrets and variables → Actions → Variables**, add:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_API_BASE_URL` — your Render backend URL, e.g. `https://your-app.onrender.com`
+4. Push to `main`. The workflow builds and deploys automatically — check the **Actions** tab for progress and the deployed URL.
+
+**Option B — manual build + push:**
 ```bash
 cd truthlens-frontend
+# Set VITE_API_BASE_URL etc. in .env to your production values first
 npm run build
 ```
-Push the `dist/` folder to a `gh-pages` branch (or use the `gh-pages` npm package / a GitHub Action). Set your repo's Pages source to that branch. Update `VITE_API_BASE_URL` in your production `.env` to your deployed Render backend URL before building.
+Push the `dist/` folder to a `gh-pages` branch (e.g. via the `gh-pages` npm package), then set your repo's Pages source to that branch.
 
 ### Backend → Render
-1. Push `truthlens-backend/` to GitHub.
-2. On [Render](https://render.com), create a new **Web Service** pointing at that repo/folder.
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Add the environment variables from your `.env` (Supabase URL, service role key, JWT secret, and set `CORS_ORIGINS` to your GitHub Pages URL).
+1. Push `truthlens-backend/` to GitHub (can be the same repo — Render lets you set a subdirectory as the build root).
+2. On [Render](https://render.com), create a new **Web Service** pointing at your repo.
+3. **Root Directory**: `truthlens-backend`
+4. **Build command**: `pip install -r requirements.txt`
+5. **Start command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+6. Add environment variables (Supabase URL/service role key, `CORS_ORIGINS`, optionally an LLM key). **`CORS_ORIGINS` must include your exact GitHub Pages origin** — e.g. `https://your-username.github.io` (origin only, not the full path — this covers any project-page subpath too). Keep `http://localhost:5173` in there as well so local dev keeps working.
+7. Deploy. Render auto-redeploys on every push, and on any env var change.
+
+**Free-tier cold starts:** Render's free tier spins down after inactivity — the first request after idle time takes a few seconds to wake up. The frontend already detects this (`services/api.js`) and shows a "reconnecting" message with automatic retries instead of failing outright.
 
 ### Database → Supabase
 Already hosted — nothing to deploy.
+
+### Verifying it's all connected
+1. Visit your GitHub Pages URL.
+2. Open browser DevTools → Network tab, run an analysis.
+3. Confirm the request goes to your Render URL (not `localhost`) and returns 200 — not a CORS error in the console.
+4. If you see a CORS error specifically, double-check `CORS_ORIGINS` on Render matches your Pages origin exactly (no trailing slash, correct `https://`).
 
 ---
 
