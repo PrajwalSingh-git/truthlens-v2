@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  GitHub Pages serves this file for any URL that doesn't match a real
+  file (e.g. someone visits /analyze directly, or refreshes on it).
+  Since this is a client-side-routed React app, there's no real file at
+  that path — so instead of showing a dead-end 404, we redirect back to
+  index.html with the intended path encoded in the query string, and a
+  matching script in index.html restores it via history.replaceState
+  before React Router ever sees it. This is the standard
+  spa-github-pages redirect trick.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TruthLens AI</title>
+    <script>
+      var pathSegmentsToKeep = 1; // number of path segments that make up the repo name, e.g. /truthlens/
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
