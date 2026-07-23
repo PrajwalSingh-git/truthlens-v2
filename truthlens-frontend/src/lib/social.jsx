@@ -3,6 +3,7 @@ export const SOCIAL_LINKS = {
   github: 'https://github.com/PrajwalSingh-git',
   linkedin: 'https://www.linkedin.com/in/prajwal-singh-',
   instagram: 'https://www.instagram.com/prajwalsingh._?igsh=eXJ3d2hzMDRiOWcz',
+  mail: 'mailto:prajwalsingh083@gmail.com',
 }
 
 export function GithubMark({ className }) {

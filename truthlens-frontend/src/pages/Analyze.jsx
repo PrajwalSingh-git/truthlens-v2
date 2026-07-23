@@ -215,7 +215,7 @@ export default function Analyze() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.18 }}
         >
-          <ConfidenceCard confidence={result?.confidence ?? 0} politicalLean={result?.political_lean ?? 0} />
+          <ConfidenceCard confidence={result?.confidence ?? 0} politicalLean={result?.political_lean ?? 0} hasResult={!!result} />
         </motion.div>
       </div>
 
