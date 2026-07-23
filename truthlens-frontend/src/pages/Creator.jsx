@@ -295,7 +295,7 @@ export default function Creator() {
               aria-label="Email"
               className="rounded-lg border border-white/10 p-2.5 text-muted transition-colors hover:border-primary/40 hover:text-primary"
             >
-              <MailMark className="h-4 w-4" />
+              <Mail className="h-4 w-4" />
             </a>
           </div>
         </Section>
