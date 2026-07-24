@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 class AnalyzeRequest(BaseModel):
@@ -79,3 +79,11 @@ class ReportItem(BaseModel):
     analysis_id: str
     title: str
     created_at: datetime
+
+
+class WaitlistJoinRequest(BaseModel):
+    email: EmailStr
+
+
+class WaitlistJoinResponse(BaseModel):
+    email: str

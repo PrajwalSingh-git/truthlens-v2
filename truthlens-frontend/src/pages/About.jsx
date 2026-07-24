@@ -136,6 +136,7 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 whileHover={{ y: -4 }}
+                className={i === signals.length - 1 && signals.length % 2 !== 0 ? 'sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-[calc(50%-0.625rem)]' : ''}
               >
                 <Card hover className="h-full">
                   <motion.div

@@ -64,7 +64,7 @@ export default function ConfidenceCard({ confidence, politicalLean = 0, hasResul
           <EmptyState />
         ) : (
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="mx-auto my-2">
+            <div className="my-2 flex justify-center">
               <motion.div className="relative" style={{ width: 150, height: 150 }}>
                 <svg width={150} height={150} className="-rotate-90">
                   <circle cx={75} cy={75} r={radius} stroke="#112131" strokeWidth={strokeWidth} fill="none" />

@@ -102,6 +102,23 @@ create policy "Users can delete their own saved reports"
   using (auth.uid() = user_id);
 
 -- ============================================================
+-- 4. waitlist_signups (Extension "Notify Me" waitlist)
+-- ============================================================
+create table if not exists public.waitlist_signups (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  created_at timestamptz default now()
+);
+
+alter table public.waitlist_signups enable row level security;
+
+-- No direct client access — all writes go through the FastAPI backend
+-- using the service role key (which bypasses RLS entirely). This table
+-- intentionally has no policies, so the anon/authenticated roles have
+-- zero access to it if ever queried directly with the anon key.
+
+
+-- ============================================================
 -- Notes:
 -- - The FastAPI backend uses the SERVICE ROLE key, which bypasses RLS.
 --   RLS above protects the tables if the frontend ever queries Supabase

@@ -119,3 +119,20 @@ def list_reports(user_id: str) -> list[dict]:
         .execute()
     )
     return res.data
+
+
+def join_waitlist(email: str) -> dict:
+    """Insert an email into the waitlist. Uses upsert semantics (on the
+    unique email constraint) so re-submitting the same email is a no-op
+    rather than an error."""
+    import uuid
+    from datetime import datetime, timezone
+
+    client = get_supabase()
+    row = {
+        "id": str(uuid.uuid4()),
+        "email": email.lower().strip(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    client.table("waitlist_signups").upsert(row, on_conflict="email").execute()
+    return {"email": row["email"]}

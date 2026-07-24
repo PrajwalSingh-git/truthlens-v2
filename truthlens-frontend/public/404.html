@@ -14,7 +14,7 @@
     <meta charset="UTF-8" />
     <title>TruthLens AI</title>
     <script>
-      var pathSegmentsToKeep = 1; // number of path segments that make up the repo name, e.g. /truthlens/
+      var pathSegmentsToKeep = 1; // 0 = root user/org page (e.g. https://you.github.io/); 1 = project page (e.g. https://you.github.io/truthlens-v2/)
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +

@@ -52,9 +52,9 @@ export default function Dashboard() {
     : null
 
   const statCards = [
-    { icon: ScanSearch, iconClass: 'bg-primary/10 text-primary', value: history.length, label: 'Total analyses' },
-    { icon: Bookmark, iconClass: 'bg-secondary/10 text-secondary', value: reports.length, label: 'Saved reports' },
-    { icon: TrendingUp, iconClass: 'bg-success/10 text-success', value: avgCredibility, label: 'Avg. credibility score' },
+    { icon: ScanSearch, iconClass: 'bg-primary/10 text-primary', value: history.length, label: 'Total analyses', to: '/history' },
+    { icon: Bookmark, iconClass: 'bg-secondary/10 text-secondary', value: reports.length, label: 'Saved reports', to: '/reports' },
+    { icon: TrendingUp, iconClass: 'bg-success/10 text-success', value: avgCredibility, label: 'Avg. credibility score', to: null },
   ]
 
   return (
@@ -66,8 +66,8 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {statCards.map((s) => (
-          <motion.div key={s.label} variants={itemVariants} whileHover={{ y: -3 }}>
+        {statCards.map((s) => {
+          const content = (
             <Card hover className="flex items-center gap-4">
               <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${s.iconClass}`}>
                 <s.icon className="h-5 w-5" />
@@ -79,8 +79,13 @@ export default function Dashboard() {
                 <div className="text-xs text-muted">{s.label}</div>
               </div>
             </Card>
-          </motion.div>
-        ))}
+          )
+          return (
+            <motion.div key={s.label} variants={itemVariants} whileHover={{ y: -3 }}>
+              {s.to ? <Link to={s.to}>{content}</Link> : content}
+            </motion.div>
+          )
+        })}
       </div>
 
       {/* Quick analyze */}

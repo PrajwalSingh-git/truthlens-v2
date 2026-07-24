@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import {
   MapPin, GraduationCap, Code2, Sparkles, ArrowRight,
-  FileText, Rocket, Mail,
+  Rocket, Mail, GitFork,
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -70,7 +71,7 @@ export default function Creator() {
         />
       </div>
 
-      <div className="mx-auto max-w-4xl space-y-16 px-6 py-16">
+      <div className="mx-auto max-w-4xl divide-y divide-white/5 px-6 py-16 [&>*]:py-16 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0">
         {/* Hero */}
         <Section className="text-center">
           <motion.div
@@ -251,11 +252,11 @@ export default function Creator() {
         <Section className="text-center">
           <h3 className="mb-5 text-xl font-bold text-text">Interested in the project?</h3>
           <div className="flex flex-wrap justify-center gap-3">
-            <a href="/analyze">
+            <Link to="/analyze">
               <Button icon={Sparkles}>Try TruthLens</Button>
-            </a>
-            <a href="#" onClick={(e) => e.preventDefault()}>
-              <Button variant="secondary" icon={FileText}>View Resume</Button>
+            </Link>
+            <a href={`${SOCIAL_LINKS.github}/truthlens-v2//fork`} target="_blank" rel="noopener noreferrer">
+              <Button variant="secondary" icon={GitFork}>Fork on GitHub</Button>
             </a>
           </div>
 
@@ -289,9 +290,7 @@ export default function Creator() {
               <InstagramMark className="h-4 w-4" />
             </a>
             <a
-              href={SOCIAL_LINKS.mail}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:hello@example.com"
               aria-label="Email"
               className="rounded-lg border border-white/10 p-2.5 text-muted transition-colors hover:border-primary/40 hover:text-primary"
             >

@@ -134,3 +134,11 @@ export const analysisApi = {
 
   getReports: () => request('/api/reports'),
 }
+
+export const waitlistApi = {
+  join: (email) =>
+    request('/api/waitlist', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+}

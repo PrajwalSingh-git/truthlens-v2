@@ -22,7 +22,10 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/truthlens-v2/dashboard`,
+      // BASE_URL already includes the trailing slash (e.g. "/truthlens-v2/"),
+      // and matches whatever `base` is set to in vite.config.js — so this
+      // stays correct in both local dev and production without hardcoding.
+      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}dashboard`,
     },
   })
   if (error) throw error

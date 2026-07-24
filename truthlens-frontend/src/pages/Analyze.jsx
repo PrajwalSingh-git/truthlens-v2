@@ -69,6 +69,12 @@ export default function Analyze() {
       return
     }
 
+    toast('AI can make mistakes — treat this as a starting point, not a final verdict.', {
+      icon: '⚠️',
+      duration: 4000,
+      id: 'ai-disclaimer',
+    })
+
     setLoading(true)
     setResult(null)
     setWakingUp(false)

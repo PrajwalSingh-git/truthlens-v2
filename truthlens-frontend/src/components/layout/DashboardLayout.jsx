@@ -1,10 +1,11 @@
 import { Outlet, NavLink } from 'react-router-dom'
-import { LayoutDashboard, ScanSearch, History, User } from 'lucide-react'
+import { LayoutDashboard, ScanSearch, History, Bookmark, User } from 'lucide-react'
 
 const items = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/analyze', label: 'Analyze', icon: ScanSearch },
   { to: '/history', label: 'History', icon: History },
+  { to: '/reports', label: 'Saved Reports', icon: Bookmark },
   { to: '/profile', label: 'Profile', icon: User },
 ]
 

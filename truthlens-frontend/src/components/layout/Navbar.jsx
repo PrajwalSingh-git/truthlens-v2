@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShieldCheck, Menu, X, LogOut, User, LayoutDashboard, History as HistoryIcon } from 'lucide-react'
+import { ShieldCheck, Menu, X, LogOut, User, LayoutDashboard, History as HistoryIcon, Bookmark } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { Button } from '@/components/ui/button'
 import { SOCIAL_LINKS, GithubMark } from '@/lib/social'
@@ -115,6 +115,13 @@ export default function Navbar() {
                       <HistoryIcon className="h-4 w-4" /> History
                     </Link>
                     <Link
+                      to="/reports"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-text hover:bg-white/5"
+                    >
+                      <Bookmark className="h-4 w-4" /> Saved Reports
+                    </Link>
+                    <Link
                       to="/profile"
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-text hover:bg-white/5"
@@ -187,6 +194,13 @@ export default function Navbar() {
                       className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted hover:bg-card hover:text-text"
                     >
                       <HistoryIcon className="h-4 w-4" /> History
+                    </Link>
+                    <Link
+                      to="/reports"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted hover:bg-card hover:text-text"
+                    >
+                      <Bookmark className="h-4 w-4" /> Saved Reports
                     </Link>
                     <Link
                       to="/profile"

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
-from app.api import analyze, history, reports
+from app.api import analyze, history, reports, waitlist
 
 settings = get_settings()
 
@@ -23,6 +23,7 @@ app.add_middleware(
 app.include_router(analyze.router)
 app.include_router(history.router)
 app.include_router(reports.router)
+app.include_router(waitlist.router)
 
 
 @app.get("/")

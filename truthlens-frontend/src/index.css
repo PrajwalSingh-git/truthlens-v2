@@ -101,26 +101,43 @@
 }
 
 /* Print stylesheet — used by the "Export PDF" button (window.print()) to
-   produce a clean printout of just the analysis results. */
+   produce a clean printout of just the analysis results.
+
+   Uses the "visibility" technique rather than display:none on siblings:
+   #printable-results can be nested arbitrarily deep inside the page (it
+   isn't a direct child of <main>), so a selector like
+   `main > *:not(#printable-results)` only hides *direct* children and
+   leaves everything above/around the nested results panel invisible —
+   the result was a blank printed page. Hiding everything via
+   `visibility: hidden` and then re-revealing just the target element
+   (and its descendants) works correctly no matter how deep it's nested,
+   because visibility:visible on a child overrides an inherited hidden
+   ancestor. */
 @media print {
-  body.print-results-only {
-    background: white !important;
+  body.print-results-only * {
+    visibility: hidden !important;
   }
-  body.print-results-only nav,
-  body.print-results-only footer,
+  body.print-results-only #printable-results,
+  body.print-results-only #printable-results * {
+    visibility: visible !important;
+  }
+  body.print-results-only #printable-results {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+  }
   body.print-results-only .print\:hidden {
     display: none !important;
   }
-  body.print-results-only #printable-results {
-    color: black !important;
+  body.print-results-only {
+    background: white !important;
   }
+  body.print-results-only #printable-results,
   body.print-results-only #printable-results * {
     color: black !important;
     background: white !important;
     border-color: #ccc !important;
     box-shadow: none !important;
-  }
-  body.print-results-only main > *:not(#printable-results) {
-    display: none !important;
   }
 }

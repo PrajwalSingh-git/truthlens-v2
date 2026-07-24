@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
 import DashboardLayout from './components/layout/DashboardLayout'
 import ProtectedRoute from './routes/ProtectedRoute'
+import ScrollToTop from './components/common/ScrollToTop'
 
 import Home from './pages/Home'
 import Analyze from './pages/Analyze'
@@ -15,15 +16,17 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import HistoryPage from './pages/HistoryPage'
+import SavedReports from './pages/SavedReports'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter basename="/truthlens-v2">
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <ScrollToTop />
         <Toaster
-          position="top-center"
+          position="bottom-right"
           toastOptions={{
             style: {
               background: '#112131',
@@ -52,6 +55,7 @@ export default function App() {
             >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="history" element={<HistoryPage />} />
+              <Route path="reports" element={<SavedReports />} />
               <Route path="profile" element={<Profile />} />
             </Route>
 
