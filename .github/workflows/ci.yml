@@ -1,13 +1,15 @@
 name: CI
 
-# Runs on every push and pull request — this is the fast feedback loop:
-# "did I break anything?" It never deploys anything; that's handled by
-# deploy-frontend.yml and deploy-backend.yml, which only run on pushes
-# to main and re-check things themselves before shipping.
+# Runs on every push (including main) and every pull request — this is
+# the check both GitHub branch protection and Render's "Auto-Deploy:
+# After CI Checks Pass" setting look at. It never deploys anything
+# itself; deploy-frontend.yml handles the frontend, and Render deploys
+# the backend natively once this workflow reports success (see the
+# CI/CD section in the README).
 
 on:
   push:
-    branches-ignore: [main]  # main is covered by the deploy workflows below
+    branches: ["**"]
   pull_request:
     branches: [main]
   workflow_dispatch: {}

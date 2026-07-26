@@ -106,10 +106,12 @@ export default function MetricGaugeGrid({ result }) {
   ]
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      {metrics.map((m, i) => (
-        <GaugeCard key={m.title} {...m} delay={i * 0.06} />
-      ))}
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2 @3xl:grid-cols-5">
+        {metrics.map((m, i) => (
+          <GaugeCard key={m.title} {...m} delay={i * 0.06} />
+        ))}
+      </div>
     </div>
   )
 }

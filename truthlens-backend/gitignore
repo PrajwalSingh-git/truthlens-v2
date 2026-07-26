@@ -1,5 +1,7 @@
 # Environment variables
 .env
+.env.bak
+.env.test_admin
 .env.local
 
 # Python
