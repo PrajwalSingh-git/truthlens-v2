@@ -176,7 +176,7 @@ export default function AdminDashboard() {
       </div>
 
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Delete this user?</DialogTitle>
             <DialogDescription>

@@ -143,29 +143,28 @@ Already hosted — nothing to deploy.
 
 ## 4.5. CI/CD
 
-Three GitHub Actions workflows live in `.github/workflows/`:
+Two GitHub Actions workflows live in `.github/workflows/`:
 
 | Workflow | Runs on | What it does |
 |---|---|---|
-| `ci.yml` | Every push (except `main`) and every PR into `main` | Runs the real pytest suite + a frontend build check. Fast feedback — never deploys anything. |
-| `deploy-frontend.yml` | Push to `main` (frontend files) | Builds the frontend; if the build succeeds, deploys to GitHub Pages. A broken build blocks the deploy automatically (`needs: build`). |
-| `deploy-backend.yml` | Push to `main` (backend files) | Runs pytest; **only if every test passes**, triggers a Render deployment via a deploy hook. |
+| `ci.yml` | Every push (including `main`) and every PR into `main` | Runs the real pytest suite + a frontend build check. This is the check both GitHub branch protection and Render's deploy gate look at. |
+| `deploy-frontend.yml` | Push to `main` (frontend files) | Builds the frontend; if the build succeeds, deploys to GitHub Pages. A broken build blocks the deploy (`needs: build`). |
 
-### One-time setup for `deploy-backend.yml`
+The backend doesn't need its own deploy workflow — **Render has a built-in "Auto-Deploy: After CI Checks Pass" setting** (Render dashboard → your service → Settings → Auto-Deploy) that natively waits for GitHub's check results on a commit before deploying. Since `ci.yml` runs on every push to `main` and reports its result as a GitHub check, Render picks that up automatically. No deploy hook, no extra secret, no need to disable Render's auto-deploy — just set that dropdown to "After CI Checks Pass" and save.
 
-Unlike the frontend, Render doesn't know about your GitHub Actions test results by default — it just redeploys on every push. To make backend deployment genuinely gated on tests passing:
-
-1. Render dashboard → your backend service → **Settings → Deploy Hook** → copy the URL.
-2. Same page, turn **off** "Auto-Deploy". (This is the important part — otherwise Render deploys on every push *regardless* of whether your tests passed, and the gate does nothing.)
-3. In your GitHub repo: **Settings → Secrets and variables → Actions → Secrets** (the **Secrets** tab, not **Variables** — this URL can trigger deploys, treat it like a password) → add `RENDER_DEPLOY_HOOK_URL` with the value from step 1.
-
-After that: push to main → `deploy-backend.yml` runs your 22 tests → only if they all pass does it call the Render hook → Render deploys. If a test fails, nothing gets deployed, and you'll see exactly which test failed in the Actions tab.
-
-If you skip this setup, `deploy-backend.yml` still runs your tests on every push (useful on its own as a safety signal) — it just logs "skipping deploy trigger" instead of deploying, and Render keeps auto-deploying on its own as before.
+**One thing this depends on:** `ci.yml` must actually run on pushes to `main` (it does, by default) — if you ever change its triggers to skip `main`, Render will have no check to wait for and the gate silently does nothing.
 
 ### Enforcing CI on pull requests (optional but recommended)
 
-To stop a broken PR from being mergeable at all: **Settings → Branches → Add branch protection rule** for `main` → enable "Require status checks to pass before merging" → select the `backend-tests` and `frontend-build` checks from `ci.yml`.
+This is separate from Render's deploy gate — it controls whether a PR can be *merged* on GitHub at all, regardless of deployment.
+
+**GitHub → repo Settings → Branches → Branch protection rules → "Add classic branch protection rule"** (the simpler of the two options; "Add branch ruleset" is GitHub's newer, more complex version — either works, classic is more common):
+1. Branch name pattern: `main`
+2. Enable **"Require status checks to pass before merging"**
+3. In the search box, look for `backend-tests` and `frontend-build` — **these only appear after `ci.yml` has run at least once on the repo.** If you don't see them yet, push any small commit (or run `ci.yml` manually via the Actions tab → "Run workflow") first, then come back to this page.
+4. Select both, save.
+
+After that, a PR with a failing test literally cannot be merged into `main` — GitHub blocks the merge button until it's green.
 
 ---
 
