@@ -37,7 +37,7 @@ function GaugeCard({ icon: Icon, title, description, value, invert = false, dela
         <div className="flex items-center gap-3">
           <div className="relative shrink-0" style={{ width: 76, height: 76 }}>
             <svg width={76} height={76} className="-rotate-90">
-              <circle cx={38} cy={38} r={radius} stroke="#112131" strokeWidth={strokeWidth} fill="none" />
+              <circle cx={38} cy={38} r={radius} stroke="#111111" strokeWidth={strokeWidth} fill="none" />
               <motion.circle
                 cx={38}
                 cy={38}

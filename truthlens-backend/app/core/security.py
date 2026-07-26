@@ -99,6 +99,18 @@ async def get_current_user(authorization: str | None = Header(default=None)) -> 
 
     token = authorization.split(" ", 1)[1]
 
+    # Admin-issued impersonation tokens are a completely separate, local
+    # (no network) check — try this first since it's nearly free, before
+    # falling through to Supabase's JWKS/shared-secret verification.
+    from app.core.admin_auth import decode_admin_jwt
+
+    impersonation_payload = decode_admin_jwt(token)
+    if impersonation_payload and impersonation_payload.get("type") == "impersonation":
+        return CurrentUser(
+            user_id=impersonation_payload["sub"],
+            email=impersonation_payload.get("email"),
+        )
+
     payload = None
     errors = []
 

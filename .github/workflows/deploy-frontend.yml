@@ -1,5 +1,11 @@
 name: Deploy frontend to GitHub Pages
 
+# The "build" job below doubles as this workflow's test gate — a broken
+# build (syntax error, failed import, etc.) fails here and "deploy" never
+# runs (see `needs: build`). For the full CI story (running actual tests,
+# not just a build check, on every push/PR — not just pushes to main),
+# see ci.yml.
+
 on:
   push:
     branches: [main]

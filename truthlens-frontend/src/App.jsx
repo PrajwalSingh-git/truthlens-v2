@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
 import DashboardLayout from './components/layout/DashboardLayout'
 import ProtectedRoute from './routes/ProtectedRoute'
+import AdminProtectedRoute from './routes/AdminProtectedRoute'
 import ScrollToTop from './components/common/ScrollToTop'
 
 import Home from './pages/Home'
@@ -19,6 +20,8 @@ import HistoryPage from './pages/HistoryPage'
 import SavedReports from './pages/SavedReports'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
 
 export default function App() {
   return (
@@ -26,16 +29,30 @@ export default function App() {
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <ScrollToTop />
         <Toaster
-          position="bottom-right"
+          position="bottom-left"
           toastOptions={{
             style: {
-              background: '#112131',
-              color: '#F8FAFC',
+              background: '#111111',
+              color: '#FAFAFA',
               border: '1px solid rgba(148,163,184,0.15)',
             },
           }}
         />
         <Routes>
+          {/* Admin panel — deliberately outside the main Layout (no
+              navbar/footer, no links to it anywhere on the public site).
+              Its own separate password-based auth, unrelated to Supabase
+              user accounts. */}
+          <Route path="creator-admin/login" element={<AdminLogin />} />
+          <Route
+            path="creator-admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
+
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="analyze" element={<Analyze />} />

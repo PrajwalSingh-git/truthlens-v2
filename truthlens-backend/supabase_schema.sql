@@ -32,6 +32,14 @@ begin
     new.raw_user_meta_data->>'full_name',
     new.raw_user_meta_data->>'avatar_url'
   );
+
+  -- Admin panel stat: incremented here (not computed from a COUNT query)
+  insert into public.usage_stats (id, total_users)
+  values (1, 1)
+  on conflict (id) do update set
+    total_users = public.usage_stats.total_users + 1,
+    updated_at = now();
+
   return new;
 end;
 $$ language plpgsql security definer;
@@ -116,6 +124,59 @@ alter table public.waitlist_signups enable row level security;
 -- using the service role key (which bypasses RLS entirely). This table
 -- intentionally has no policies, so the anon/authenticated roles have
 -- zero access to it if ever queried directly with the anon key.
+
+
+-- ============================================================
+-- 5. deleted_users (soft-archive on account deletion)
+-- ============================================================
+create table if not exists public.deleted_users (
+  id uuid primary key default gen_random_uuid(),
+  original_user_id uuid not null,
+  email text,
+  full_name text,
+  total_analyses int default 0,
+  total_reports int default 0,
+  account_created_at timestamptz,
+  deleted_at timestamptz default now()
+);
+
+alter table public.deleted_users enable row level security;
+-- No policies — backend-only access via service role, same pattern as
+-- waitlist_signups above.
+
+
+-- ============================================================
+-- 6. usage_stats (admin panel — single aggregate row, NOT computed
+--    live from other tables; incremented directly by the backend)
+-- ============================================================
+create table if not exists public.usage_stats (
+  id int primary key default 1,
+  total_users int default 0,
+  total_searches int default 0,
+  updated_at timestamptz default now(),
+  constraint usage_stats_singleton check (id = 1)
+);
+
+insert into public.usage_stats (id, total_users, total_searches)
+values (1, 0, 0)
+on conflict (id) do nothing;
+
+alter table public.usage_stats enable row level security;
+-- No policies — backend-only access via service role.
+
+
+-- ============================================================
+-- 7. user_search_counts (admin panel — per-user search count,
+--    incremented directly, not derived from a COUNT(*) query)
+-- ============================================================
+create table if not exists public.user_search_counts (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  search_count int default 0,
+  last_search_at timestamptz
+);
+
+alter table public.user_search_counts enable row level security;
+-- No policies — backend-only access via service role.
 
 
 -- ============================================================

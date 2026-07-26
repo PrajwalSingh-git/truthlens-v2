@@ -87,3 +87,31 @@ class WaitlistJoinRequest(BaseModel):
 
 class WaitlistJoinResponse(BaseModel):
     email: str
+
+
+class AdminLoginRequest(BaseModel):
+    password: str
+
+
+class AdminLoginResponse(BaseModel):
+    token: str
+
+
+class AdminStatsResponse(BaseModel):
+    total_users: int
+    total_searches: int
+
+
+class AdminUserItem(BaseModel):
+    id: str
+    email: str | None
+    full_name: str | None
+    created_at: str
+    search_count: int
+    last_search_at: str | None
+
+
+class ImpersonateResponse(BaseModel):
+    token: str
+    email: str | None
+    user_id: str

@@ -2,8 +2,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { BrainCircuit, Sparkles } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import CountUp from '@/components/ui/count-up'
+import { scoreToTone } from '@/components/ui/meter'
 
 const WILL_CALCULATE = ['Credibility', 'Bias', 'Emotional manipulation', 'Propaganda', 'Clickbait']
+const TONE_COLORS = { success: '#22C55E', warning: '#F59E0B', danger: '#EF4444' }
 
 function EmptyState() {
   return (
@@ -42,11 +44,12 @@ function EmptyState() {
   )
 }
 
-export default function ConfidenceCard({ confidence, politicalLean = 0, hasResult = false }) {
+export default function ConfidenceCard({ confidence, credibility = confidence, politicalLean = 0, hasResult = false }) {
   const radius = 60
   const strokeWidth = 12
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (confidence / 100) * circumference
+  const gaugeColor = TONE_COLORS[scoreToTone(credibility)]
 
   // politicalLean: -100 (left) .. 0 (neutral) .. +100 (right) -> 0..100% position
   const spectrumPct = Math.max(0, Math.min(100, (politicalLean + 100) / 2))
@@ -67,12 +70,12 @@ export default function ConfidenceCard({ confidence, politicalLean = 0, hasResul
             <div className="my-2 flex justify-center">
               <motion.div className="relative" style={{ width: 150, height: 150 }}>
                 <svg width={150} height={150} className="-rotate-90">
-                  <circle cx={75} cy={75} r={radius} stroke="#112131" strokeWidth={strokeWidth} fill="none" />
+                  <circle cx={75} cy={75} r={radius} stroke="#111111" strokeWidth={strokeWidth} fill="none" />
                   <motion.circle
                     cx={75}
                     cy={75}
                     r={radius}
-                    stroke="#22D3EE"
+                    stroke={gaugeColor}
                     strokeWidth={strokeWidth}
                     fill="none"
                     strokeLinecap="round"
@@ -80,7 +83,7 @@ export default function ConfidenceCard({ confidence, politicalLean = 0, hasResul
                     initial={{ strokeDashoffset: circumference }}
                     animate={{ strokeDashoffset: offset }}
                     transition={{ duration: 1.2, ease: 'easeOut' }}
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.5))' }}
+                    style={{ filter: `drop-shadow(0 0 8px ${gaugeColor}80)` }}
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">

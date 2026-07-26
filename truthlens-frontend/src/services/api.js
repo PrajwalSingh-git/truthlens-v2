@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient'
+import { getImpersonation } from './adminApi'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -16,6 +17,14 @@ export class ApiError extends Error {
 }
 
 async function authHeader() {
+  // If an admin is impersonating a user, that token takes priority over
+  // the browser's own (if any) Supabase session — this is what lets the
+  // admin see /dashboard, /history, etc. exactly as that user would.
+  const impersonation = getImpersonation()
+  if (impersonation?.token) {
+    return { Authorization: `Bearer ${impersonation.token}` }
+  }
+
   const { data } = await supabase.auth.getSession()
   const token = data.session?.access_token
   return token ? { Authorization: `Bearer ${token}` } : {}
@@ -141,4 +150,8 @@ export const waitlistApi = {
       method: 'POST',
       body: JSON.stringify({ email }),
     }),
+}
+
+export const accountApi = {
+  deleteAccount: () => request('/api/account', { method: 'DELETE' }),
 }

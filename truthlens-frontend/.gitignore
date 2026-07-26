@@ -1,42 +1,49 @@
-# Logs
-logs
-*.log
+# Dependencies
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# Dependencies
-node_modules/
-.pnpm-store/
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # Build outputs
 dist/
 dist-ssr/
 build/
-coverage/
-*.tsbuildinfo
+.parcel-cache
 
-# Local environment files
-.env
-.env.local
-.env.*.local
-*.local
-
-# Cache and temp files
-.cache/
-.tmp/
-*.tmp
-
-# Editor directories and files
+# IDE and Editor
 .vscode/*
 !.vscode/extensions.json
 .idea/
+*.swp
+*.swo
+*~
+*.local
+
+# OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and debugging
+logs
+logs/
+*.log
+lerna-debug.log*
+.eslintcache
+
+# Editor specific
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-Thumbs.db

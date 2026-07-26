@@ -20,7 +20,7 @@ export function CredibilityDonut({ credibility }) {
     { name: 'Credible', value: credibility },
     { name: 'Risk', value: risk },
   ]
-  const colors = ['#22D3EE', '#EF4444']
+  const colors = ['#34D399', '#EF4444']
 
   return (
     <Card>
@@ -65,9 +65,9 @@ export function PropagandaRadar({ characteristics }) {
       <div className="h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data} outerRadius="75%">
-            <PolarGrid stroke="#1e2c3a" />
-            <PolarAngleAxis dataKey="subject" tick={{ fill: '#94A3B8', fontSize: 11 }} />
-            <Radar dataKey="value" stroke="#22D3EE" fill="#22D3EE" fillOpacity={0.35} strokeWidth={2} />
+            <PolarGrid stroke="#1a1a1a" />
+            <PolarAngleAxis dataKey="subject" tick={{ fill: '#9CA3AF', fontSize: 11 }} />
+            <Radar dataKey="value" stroke="#34D399" fill="#34D399" fillOpacity={0.35} strokeWidth={2} />
           </RadarChart>
         </ResponsiveContainer>
       </div>
@@ -90,13 +90,13 @@ export function SentimentArcChart({ arc }) {
           <AreaChart data={data} margin={{ top: 6, right: 6, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="sentimentFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#22D3EE" stopOpacity={0.5} />
-                <stop offset="100%" stopColor="#22D3EE" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#34D399" stopOpacity={0.5} />
+                <stop offset="100%" stopColor="#34D399" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="stage" tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={{ stroke: '#1e2c3a' }} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <Area type="monotone" dataKey="value" stroke="#22D3EE" strokeWidth={2} fill="url(#sentimentFill)" />
+            <XAxis dataKey="stage" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#1a1a1a' }} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={false} tickLine={false} />
+            <Area type="monotone" dataKey="value" stroke="#34D399" strokeWidth={2} fill="url(#sentimentFill)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>

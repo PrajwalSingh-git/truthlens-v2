@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ShieldCheck, Menu, X, LogOut, User, LayoutDashboard, History as HistoryIcon, Bookmark } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { Button } from '@/components/ui/button'
-import { SOCIAL_LINKS, GithubMark } from '@/lib/social'
 
 // Main nav is intentionally the same whether signed in or not — Dashboard
 // and History live in the profile menu instead, so the top nav doesn't
@@ -68,16 +67,6 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href={SOCIAL_LINKS.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View source on GitHub"
-            className="flex items-center gap-2 rounded-lg border border-white/10 px-3.5 py-2 text-sm font-medium text-muted transition-colors hover:border-primary/40 hover:text-text"
-          >
-            <GithubMark className="h-4 w-4" />
-            GitHub
-          </a>
           {isAuthenticated ? (
             <div className="relative">
               <button
@@ -171,14 +160,6 @@ export default function Navbar() {
                 </NavLink>
               ))}
               <div className="mt-2 border-t border-white/5 pt-3">
-                <a
-                  href={SOCIAL_LINKS.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted hover:bg-card hover:text-text"
-                >
-                  <GithubMark className="h-4 w-4" /> View on GitHub
-                </a>
                 {isAuthenticated ? (
                   <>
                     <Link

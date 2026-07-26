@@ -37,7 +37,14 @@ const SAMPLES = [
   },
 ]
 
-const DEMO_SAMPLE = "Shocking truth revealed: secret documents prove the media is hiding this crisis from you. You won't believe what officials are refusing to admit, and doctors hate this evidence because it exposes their agenda."
+const DEMO_SAMPLES = [
+  "Shocking truth revealed: secret documents prove the media is hiding this crisis from you. You won't believe what officials are refusing to admit, and doctors hate this evidence because it exposes their agenda.",
+  "BREAKING: Local officials quietly approve massive spending increase while nobody was watching. Sources say this could affect every household — share before it's too late!",
+  "According to a peer-reviewed study published this month, researchers observed a measurable increase in outcomes across 12,000 participants, though the authors caution further replication is needed.",
+  "You won't believe what this celebrity said about the new policy — critics are calling it the most outrageous statement of the year, and the backlash is only getting started.",
+  "The city council held its regular quarterly meeting on Tuesday, where members reviewed the proposed budget and voted 5-2 to advance it to public comment.",
+  "Wake up, people. They don't want you to see this. The so-called experts have been covering it up for years, and it's finally time someone told the truth.",
+]
 
 export default function Analyze() {
   const [mode, setMode] = useState('text')
@@ -47,6 +54,7 @@ export default function Analyze() {
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState(null)
   const [wakingUp, setWakingUp] = useState(false)
+  const [lastDemoIndex, setLastDemoIndex] = useState(-1)
   const { isAuthenticated } = useAuth()
 
   function loadSample(sample) {
@@ -57,8 +65,15 @@ export default function Analyze() {
   }
 
   function loadDemo() {
+    let next = Math.floor(Math.random() * DEMO_SAMPLES.length)
+    if (DEMO_SAMPLES.length > 1) {
+      while (next === lastDemoIndex) {
+        next = Math.floor(Math.random() * DEMO_SAMPLES.length)
+      }
+    }
+    setLastDemoIndex(next)
     setMode('text')
-    setText(DEMO_SAMPLE)
+    setText(DEMO_SAMPLES[next])
     setResult(null)
   }
 
@@ -221,7 +236,7 @@ export default function Analyze() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.18 }}
         >
-          <ConfidenceCard confidence={result?.confidence ?? 0} politicalLean={result?.political_lean ?? 0} hasResult={!!result} />
+          <ConfidenceCard confidence={result?.confidence ?? 0} credibility={result?.credibility ?? 0} politicalLean={result?.political_lean ?? 0} hasResult={!!result} />
         </motion.div>
       </div>
 

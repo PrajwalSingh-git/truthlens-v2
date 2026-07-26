@@ -1,0 +1,58 @@
+name: CI
+
+# Runs on every push and pull request — this is the fast feedback loop:
+# "did I break anything?" It never deploys anything; that's handled by
+# deploy-frontend.yml and deploy-backend.yml, which only run on pushes
+# to main and re-check things themselves before shipping.
+
+on:
+  push:
+    branches-ignore: [main]  # main is covered by the deploy workflows below
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: truthlens-backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: truthlens-backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: truthlens-frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: truthlens-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (this is the frontend's CI check — a broken build fails here)
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: npm run build

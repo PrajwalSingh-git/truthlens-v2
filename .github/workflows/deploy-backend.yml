@@ -1,0 +1,59 @@
+name: Test and deploy backend
+
+# Runs the real pytest suite (app/services/analysis_engine.py,
+# admin auth, etc.) on every push to main that touches the backend, and
+# ONLY triggers a Render deployment if every test passes. This requires
+# one manual setup step — see README section "CI/CD" for the full
+# walkthrough — but the short version:
+#   1. Render dashboard > your service > Settings > Deploy Hook > copy the URL.
+#   2. Turn OFF Render's "Auto-Deploy" for this service (otherwise Render
+#      deploys on every push regardless of whether tests passed, which
+#      defeats the point of gating on tests).
+#   3. Add that URL as a GitHub Actions secret named RENDER_DEPLOY_HOOK_URL
+#      (Settings > Secrets and variables > Actions > Secrets, not Variables
+#      — this one IS sensitive, treat it like a password).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "truthlens-backend/**"
+      - ".github/workflows/deploy-backend.yml"
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: truthlens-backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: truthlens-backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set — skipping deploy trigger."
+            echo "Tests passed, but nothing was deployed. See the comment at the top of this file for setup steps."
+            exit 0
+          fi
+          curl -fsS -X POST "$DEPLOY_HOOK_URL"
+          echo "Render deploy triggered."

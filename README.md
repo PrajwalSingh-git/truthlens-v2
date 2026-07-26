@@ -27,6 +27,7 @@ From the repo root:
 ```bash
 chmod +x setup.sh   # first time only
 ./setup.sh
+./setup.ps1
 ```
 This copies both `.env.example` files to `.env`, installs frontend deps, and sets up a backend virtualenv. Then jump to step 3/4 in "Quick start" below.
 
@@ -137,6 +138,34 @@ Already hosted — nothing to deploy.
 2. Open browser DevTools → Network tab, run an analysis.
 3. Confirm the request goes to your Render URL (not `localhost`) and returns 200 — not a CORS error in the console.
 4. If you see a CORS error specifically, double-check `CORS_ORIGINS` on Render matches your Pages origin exactly (no trailing slash, correct `https://`).
+
+---
+
+## 4.5. CI/CD
+
+Three GitHub Actions workflows live in `.github/workflows/`:
+
+| Workflow | Runs on | What it does |
+|---|---|---|
+| `ci.yml` | Every push (except `main`) and every PR into `main` | Runs the real pytest suite + a frontend build check. Fast feedback — never deploys anything. |
+| `deploy-frontend.yml` | Push to `main` (frontend files) | Builds the frontend; if the build succeeds, deploys to GitHub Pages. A broken build blocks the deploy automatically (`needs: build`). |
+| `deploy-backend.yml` | Push to `main` (backend files) | Runs pytest; **only if every test passes**, triggers a Render deployment via a deploy hook. |
+
+### One-time setup for `deploy-backend.yml`
+
+Unlike the frontend, Render doesn't know about your GitHub Actions test results by default — it just redeploys on every push. To make backend deployment genuinely gated on tests passing:
+
+1. Render dashboard → your backend service → **Settings → Deploy Hook** → copy the URL.
+2. Same page, turn **off** "Auto-Deploy". (This is the important part — otherwise Render deploys on every push *regardless* of whether your tests passed, and the gate does nothing.)
+3. In your GitHub repo: **Settings → Secrets and variables → Actions → Secrets** (the **Secrets** tab, not **Variables** — this URL can trigger deploys, treat it like a password) → add `RENDER_DEPLOY_HOOK_URL` with the value from step 1.
+
+After that: push to main → `deploy-backend.yml` runs your 22 tests → only if they all pass does it call the Render hook → Render deploys. If a test fails, nothing gets deployed, and you'll see exactly which test failed in the Actions tab.
+
+If you skip this setup, `deploy-backend.yml` still runs your tests on every push (useful on its own as a safety signal) — it just logs "skipping deploy trigger" instead of deploying, and Render keeps auto-deploying on its own as before.
+
+### Enforcing CI on pull requests (optional but recommended)
+
+To stop a broken PR from being mergeable at all: **Settings → Branches → Add branch protection rule** for `main` → enable "Require status checks to pass before merging" → select the `backend-tests` and `frontend-build` checks from `ci.yml`.
 
 ---
 

@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
-  MapPin, GraduationCap, Code2, Sparkles, ArrowRight,
-  Rocket, Mail, GitFork,
+  MapPin, GraduationCap, Code2, Sparkles, ArrowRight, ArrowDown,
+  Rocket, Mail, GitFork, Atom, Zap, Server, Brain, Database, Cloud,
+  Palette, Globe2, Lightbulb, Cog, ShieldCheck,
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import StatsStrip from '@/components/common/StatsStrip'
 import { SOCIAL_LINKS, GithubMark, LinkedinMark, InstagramMark } from '@/lib/social'
@@ -26,11 +26,33 @@ const FEATURES_BUILT = [
   'Propaganda & bias detection',
 ]
 
-const ARCHITECTURE = ['Browser', 'React + Vite', 'FastAPI', 'AI Analysis', 'Supabase']
+const ARCHITECTURE = [
+  { icon: Globe2, title: 'Browser', desc: 'Where you interact with TruthLens — any modern browser, no install needed.' },
+  { icon: Atom, title: 'React + Vite', desc: 'Frontend interface, routing, charts, and authentication state.' },
+  { icon: Server, title: 'FastAPI API', desc: 'Handles requests, coordinates analysis, and enforces auth on protected routes.' },
+  { icon: Brain, title: 'AI Analysis Engine', desc: 'Scores credibility, bias, and propaganda signals — heuristic or LLM-backed.' },
+  { icon: Database, title: 'Supabase Database', desc: 'Stores accounts, analysis history, and saved reports securely.' },
+]
 
-const TIMELINE = ['Idea', 'UI Design', 'FastAPI backend', 'Supabase integration', 'Deployment', 'TruthLens v2']
+const TIMELINE = [
+  { icon: Lightbulb, label: 'Idea' },
+  { icon: Palette, label: 'UI Design' },
+  { icon: Cog, label: 'Backend' },
+  { icon: Brain, label: 'AI Integration' },
+  { icon: Cloud, label: 'Deployment' },
+  { icon: Rocket, label: 'TruthLens v2' },
+]
 
-const TECH_STACK = ['React', 'Vite', 'FastAPI', 'Python', 'Supabase', 'GitHub Pages', 'Render', 'Tailwind CSS']
+const TECH_STACK = [
+  { name: 'React', category: 'Frontend', icon: Atom },
+  { name: 'Vite', category: 'Build Tool', icon: Zap },
+  { name: 'FastAPI', category: 'Backend', icon: Server },
+  { name: 'Python', category: 'AI', icon: Brain },
+  { name: 'Supabase', category: 'Database', icon: Database },
+  { name: 'Render', category: 'Hosting', icon: Cloud },
+  { name: 'Tailwind CSS', category: 'Styling', icon: Palette },
+  { name: 'GitHub Pages', category: 'Deployment', icon: GithubMark },
+]
 
 const CHALLENGES = [
   { problem: 'GitHub Pages has no server-side routing', solution: 'Client-side redirect trick (404.html + history restore) to support clean React Router URLs.' },
@@ -132,75 +154,96 @@ export default function Creator() {
           </div>
         </Section>
 
-        {/* Architecture diagram */}
+        {/* Architecture diagram — full-width cards with descriptions */}
         <Section>
-          <h3 className="mb-5 text-center text-xl font-bold text-text">How it's built</h3>
-          <Card>
-            <div className="flex flex-col items-center gap-2">
-              {ARCHITECTURE.map((step, i) => (
-                <motion.div key={step} className="flex flex-col items-center gap-2">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: i * 0.1 }}
-                    className="rounded-xl border border-primary/30 bg-primary/5 px-6 py-2.5 text-sm font-medium text-primary"
-                  >
-                    {step}
-                  </motion.div>
-                  {i < ARCHITECTURE.length - 1 && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      whileInView={{ opacity: 1, height: 20 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.2, delay: i * 0.1 + 0.15 }}
-                      className="w-px bg-primary/30"
-                    />
-                  )}
+          <h3 className="mb-2 text-center text-xl font-bold text-text">How it's built</h3>
+          <p className="mb-6 text-center text-sm text-muted">A request's journey from your browser to a finished analysis.</p>
+          <div className="mx-auto flex max-w-lg flex-col items-stretch gap-1">
+            {ARCHITECTURE.map((step, i) => (
+              <div key={step.title}>
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: i * 0.1 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <Card hover glow={false} className="flex items-start gap-4 transition-shadow hover:shadow-glow">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <step.icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-text">{step.title}</h4>
+                      <p className="mt-1 text-sm text-muted">{step.desc}</p>
+                    </div>
+                  </Card>
                 </motion.div>
-              ))}
-            </div>
-          </Card>
+                {i < ARCHITECTURE.length - 1 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: i * 0.1 + 0.2 }}
+                    className="flex justify-center py-1"
+                  >
+                    <motion.div
+                      animate={{ y: [0, 4, 0] }}
+                      transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.15 }}
+                    >
+                      <ArrowDown className="h-4 w-4 text-primary/50" />
+                    </motion.div>
+                  </motion.div>
+                )}
+              </div>
+            ))}
+          </div>
         </Section>
 
-        {/* Timeline */}
+        {/* Timeline — icons with connecting line */}
         <Section>
-          <h3 className="mb-5 text-center text-xl font-bold text-text">Project timeline</h3>
-          <div className="relative mx-auto max-w-md">
-            <div className="absolute left-[7px] top-2 bottom-2 w-px bg-white/10" />
-            <div className="space-y-5">
+          <h3 className="mb-6 text-center text-xl font-bold text-text">Project timeline</h3>
+          <div className="relative mx-auto max-w-xs">
+            <div className="absolute left-5 top-5 bottom-5 w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
+            <div className="space-y-6">
               {TIMELINE.map((step, i) => (
                 <motion.div
-                  key={step}
+                  key={step.label}
                   initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.3, delay: i * 0.08 }}
-                  className="relative flex items-center gap-4 pl-1"
+                  className="relative flex items-center gap-4"
                 >
-                  <span className="z-10 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-primary bg-bg" />
-                  <span className="text-sm font-medium text-text">{step}</span>
+                  <span className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-bg text-primary">
+                    <step.icon className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm font-medium text-text">{step.label}</span>
                 </motion.div>
               ))}
             </div>
           </div>
         </Section>
 
-        {/* Tech stack */}
+        {/* Tech stack — cards with icon + category */}
         <Section>
-          <h3 className="mb-5 text-center text-xl font-bold text-text">Tech stack</h3>
-          <div className="flex flex-wrap justify-center gap-3">
+          <h3 className="mb-6 text-center text-xl font-bold text-text">Tech stack</h3>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {TECH_STACK.map((t, i) => (
               <motion.div
-                key={t}
+                key={t.name}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: i * 0.04 }}
                 whileHover={{ y: -3 }}
-                className="rounded-xl border border-white/10 bg-card/50 px-5 py-3 text-sm font-medium text-text transition-all hover:border-primary/40 hover:shadow-glow"
               >
-                {t}
+                <Card hover className="flex flex-col items-center gap-2 py-5 text-center transition-shadow hover:shadow-glow">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <t.icon className="h-4 w-4" />
+                  </div>
+                  <div className="text-sm font-semibold text-text">{t.name}</div>
+                  <div className="text-[11px] uppercase tracking-wide text-muted">{t.category}</div>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -255,7 +298,7 @@ export default function Creator() {
             <Link to="/analyze">
               <Button icon={Sparkles}>Try TruthLens</Button>
             </Link>
-            <a href={`${SOCIAL_LINKS.github}/truthlens-v2//fork`} target="_blank" rel="noopener noreferrer">
+            <a href={`${SOCIAL_LINKS.github}/fork`} target="_blank" rel="noopener noreferrer">
               <Button variant="secondary" icon={GitFork}>Fork on GitHub</Button>
             </a>
           </div>

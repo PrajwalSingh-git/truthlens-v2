@@ -3,7 +3,7 @@ import { Progress } from '@/components/ui/progress'
 import CountUp from '@/components/ui/count-up'
 
 const toneColors = {
-  primary: '#22D3EE',
+  primary: '#34D399',
   success: '#22C55E',
   warning: '#F59E0B',
   danger: '#EF4444',
@@ -32,7 +32,7 @@ export default function Meter({ label, value, tone, size = 120, strokeWidth = 10
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={radius} stroke="#112131" strokeWidth={strokeWidth} fill="none" />
+          <circle cx={size / 2} cy={size / 2} r={radius} stroke="#111111" strokeWidth={strokeWidth} fill="none" />
           <motion.circle
             cx={size / 2}
             cy={size / 2}

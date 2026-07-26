@@ -24,6 +24,13 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     groq_api_key: str = ""
 
+    # Admin panel auth (completely separate from Supabase user auth — a
+    # single shared password for you, not tied to any user account).
+    # ADMIN_PASSWORD_HASH is a SHA-256 hex digest, e.g. generate with:
+    #   python3 -c "import hashlib; print(hashlib.sha256(b'your-password').hexdigest())"
+    admin_password_hash: str = ""
+    admin_jwt_secret: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
