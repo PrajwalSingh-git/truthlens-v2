@@ -194,14 +194,14 @@ def delete_account(user_id: str) -> dict:
     reports_res = client.table("saved_reports").select("id", count="exact").eq("user_id", user_id).execute()
     total_reports = reports_res.count or 0
 
-    archive_row = {
+    archive_row = _json_safe({
         "original_user_id": user_id,
         "email": email,
         "full_name": full_name,
         "total_analyses": total_analyses,
         "total_reports": total_reports,
         "account_created_at": created_at,
-    }
+    })
     client.table("deleted_users").insert(archive_row).execute()
 
     # Deleting the auth user cascades to profiles/analyses/saved_reports
@@ -249,3 +249,30 @@ def list_all_users() -> list[dict]:
 
     users.sort(key=lambda u: u["created_at"], reverse=True)
     return users
+
+
+def log_admin_action(action: str, target_user_id: str | None = None, target_email: str | None = None) -> None:
+    """Best-effort audit logging — never blocks or fails the actual admin
+    action if this write itself fails (e.g. table missing on an older
+    deployment that hasn't re-run the schema yet)."""
+    try:
+        client = get_supabase()
+        client.table("admin_audit_log").insert({
+            "action": action,
+            "target_user_id": target_user_id,
+            "target_email": target_email,
+        }).execute()
+    except Exception:
+        pass
+
+
+def get_audit_log(limit: int = 100) -> list[dict]:
+    client = get_supabase()
+    res = (
+        client.table("admin_audit_log")
+        .select("*")
+        .order("created_at", desc=True)
+        .limit(limit)
+        .execute()
+    )
+    return res.data or []

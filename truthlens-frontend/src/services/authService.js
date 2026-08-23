@@ -37,6 +37,19 @@ export async function signOut() {
   if (error) throw error
 }
 
+export async function requestPasswordReset(email) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    // Same basename-aware pattern as the Google OAuth redirect above.
+    redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}reset-password`,
+  })
+  if (error) throw error
+}
+
+export async function updatePassword(newPassword) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}
+
 export async function getCurrentSession() {
   const { data, error } = await supabase.auth.getSession()
   if (error) throw error

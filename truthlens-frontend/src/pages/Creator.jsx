@@ -298,7 +298,7 @@ export default function Creator() {
             <Link to="/analyze">
               <Button icon={Sparkles}>Try TruthLens</Button>
             </Link>
-            <a href={`${SOCIAL_LINKS.github}/truthlens-v2/fork`} target="_blank" rel="noopener noreferrer">
+            <a href={`${SOCIAL_LINKS.github}/fork`} target="_blank" rel="noopener noreferrer">
               <Button variant="secondary" icon={GitFork}>Fork on GitHub</Button>
             </a>
           </div>
@@ -333,7 +333,7 @@ export default function Creator() {
               <InstagramMark className="h-4 w-4" />
             </a>
             <a
-              href={SOCIAL_LINKS.mail}
+              href="mailto:hello@example.com"
               aria-label="Email"
               className="rounded-lg border border-white/10 p-2.5 text-muted transition-colors hover:border-primary/40 hover:text-primary"
             >

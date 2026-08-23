@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Trash2, Eye, Search, History, SearchX, ScanSearch } from 'lucide-react'
+import { Trash2, Eye, Search, History, SearchX, ScanSearch, Download } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { scoreToTone } from '@/components/ui/meter'
 import EmptyState from '@/components/ui/empty-state'
 import ResultsPanel from '@/components/analysis/ResultsPanel'
 import { analysisApi, describeApiError } from '@/services/api'
+import { exportHistoryToCsv } from '@/lib/csvExport'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -78,9 +79,21 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold">History</h1>
-        <p className="mt-1 text-muted">Every analysis you've run, in one timeline.</p>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">History</h1>
+          <p className="mt-1 text-muted">Every analysis you've run, in one timeline.</p>
+        </div>
+        {history.length > 0 && (
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={Download}
+            onClick={() => exportHistoryToCsv(filtered.length ? filtered : history)}
+          >
+            Export CSV
+          </Button>
+        )}
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>

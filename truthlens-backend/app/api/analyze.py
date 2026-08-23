@@ -5,6 +5,7 @@ from app.core.rate_limit import rate_limit
 from app.models.schemas import AnalyzeRequest, AnalyzeResponse
 from app.services import llm_engine
 from app.services import supabase_service
+from app.services import analysis_cache
 from app.services.url_fetcher import extract_article_text
 
 router = APIRouter(prefix="/api", tags=["analysis"])
@@ -23,10 +24,15 @@ async def analyze_content(
         except ValueError as e:
             raise HTTPException(status_code=422, detail=str(e))
 
-    # llm_engine.analyze() tries an LLM (Anthropic/Groq) if configured,
-    # and transparently falls back to the offline heuristic engine
-    # otherwise or on any failure — this call never raises.
-    result = llm_engine.analyze(payload.input_type, text_to_analyze)
+    cached = analysis_cache.get_cached(payload.input_type, text_to_analyze)
+    if cached is not None:
+        result = cached
+    else:
+        # llm_engine.analyze() tries an LLM (Anthropic/Groq) if configured,
+        # and transparently falls back to the offline heuristic engine
+        # otherwise or on any failure — this call never raises.
+        result = llm_engine.analyze(payload.input_type, text_to_analyze)
+        analysis_cache.set_cached(payload.input_type, text_to_analyze, result)
 
     # For URL inputs, keep the original URL as the display title rather
     # than the extracted article's opening sentence.

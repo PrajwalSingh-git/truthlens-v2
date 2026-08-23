@@ -180,6 +180,23 @@ alter table public.user_search_counts enable row level security;
 
 
 -- ============================================================
+-- 8. admin_audit_log (accountability — who did what, when, to whom)
+-- ============================================================
+create table if not exists public.admin_audit_log (
+  id uuid primary key default gen_random_uuid(),
+  action text not null,              -- e.g. 'delete_user', 'impersonate_user'
+  target_user_id uuid,
+  target_email text,
+  created_at timestamptz default now()
+);
+
+create index if not exists admin_audit_log_created_at_idx on public.admin_audit_log(created_at desc);
+
+alter table public.admin_audit_log enable row level security;
+-- No policies — backend-only access via service role.
+
+
+-- ============================================================
 -- Notes:
 -- - The FastAPI backend uses the SERVICE ROLE key, which bypasses RLS.
 --   RLS above protects the tables if the frontend ever queries Supabase

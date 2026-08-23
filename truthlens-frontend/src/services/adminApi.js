@@ -83,4 +83,6 @@ export const adminApi = {
     setImpersonation(data.token, data.email, data.user_id)
     return data
   },
+
+  getAuditLog: () => adminRequest('/api/admin/audit-log'),
 }

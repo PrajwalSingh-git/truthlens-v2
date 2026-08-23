@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
@@ -15,13 +16,27 @@ import Extension from './pages/Extension'
 import Creator from './pages/Creator'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import HistoryPage from './pages/HistoryPage'
 import SavedReports from './pages/SavedReports'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
-import AdminLogin from './pages/admin/AdminLogin'
-import AdminDashboard from './pages/admin/AdminDashboard'
+
+// Lazy-loaded: the admin panel is never touched by ~99% of visitors, so
+// there's no reason to ship its code (and its own table/dialog/chart
+// usage) in the main bundle everyone downloads on first visit.
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+
+function AdminFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-bg">
+      <div className="h-10 w-10 animate-spin rounded-full border-2 border-card border-t-primary" />
+    </div>
+  )
+}
 
 export default function App() {
   return (
@@ -40,15 +55,25 @@ export default function App() {
         />
         <Routes>
           {/* Admin panel — deliberately outside the main Layout (no
-              navbar/footer, no links to it anywhere on the public site).
+              navbar/footer, no links to it anywhere on the public site),
+              and lazy-loaded so its code never ships to regular visitors.
               Its own separate password-based auth, unrelated to Supabase
               user accounts. */}
-          <Route path="creator-admin/login" element={<AdminLogin />} />
+          <Route
+            path="creator-admin/login"
+            element={
+              <Suspense fallback={<AdminFallback />}>
+                <AdminLogin />
+              </Suspense>
+            }
+          />
           <Route
             path="creator-admin"
             element={
               <AdminProtectedRoute>
-                <AdminDashboard />
+                <Suspense fallback={<AdminFallback />}>
+                  <AdminDashboard />
+                </Suspense>
               </AdminProtectedRoute>
             }
           />
@@ -62,6 +87,8 @@ export default function App() {
             <Route path="creator" element={<Creator />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
 
             <Route
               element={

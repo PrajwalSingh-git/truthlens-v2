@@ -27,7 +27,6 @@ From the repo root:
 ```bash
 chmod +x setup.sh   # first time only
 ./setup.sh
-./setup.ps1
 ```
 This copies both `.env.example` files to `.env`, installs frontend deps, and sets up a backend virtualenv. Then jump to step 3/4 in "Quick start" below.
 
